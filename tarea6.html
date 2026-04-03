@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarea 6 - Efectos Visuales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: rgb(0, 0, 0);
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .hover-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 35px;
+            margin-bottom: 50px;
+        }
+
+        /* EFECTO 1: LIFT & SHADOW */
+        .card-lift {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .card-lift:nth-child(1) { animation-delay: 0.1s; }
+        .card-lift:nth-child(2) { animation-delay: 0.2s; }
+        .card-lift:nth-child(3) { animation-delay: 0.3s; }
+
+        .card-lift:hover {
+            transform: translateY(-20px) rotateX(5deg);
+            box-shadow: 0 30px 60px rgba(0, 102, 255, 0.4);
+        }
+
+        .card-lift img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .card-lift:hover img {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-content h3 {
+            color: #0099ff;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .card-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* EFECTO 2: BORDER ANIMATION */
+        .card-border {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .card-border:nth-child(4) { animation-delay: 0.1s; }
+        .card-border:nth-child(5) { animation-delay: 0.2s; }
+        .card-border:nth-child(6) { animation-delay: 0.3s; }
+
+        .card-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #0099ff, transparent);
+            transition: left 0.6s ease;
+        }
+
+        .card-border:hover::before {
+            left: 100%;
+        }
+
+        .card-border::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 3px;
+            height: 0;
+            background: #0099ff;
+            transition: height 0.6s ease 0.2s;
+        }
+
+        .card-border:hover::after {
+            height: 100%;
+        }
+
+        .card-border .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-border h3 {
+            color: #0099ff;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            transition: color 0.3s ease;
+        }
+
+        .card-border p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* EFECTO 3: GRADIENT SHIFT */
+        .card-gradient {
+            position: relative;
+            height: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .card-gradient:nth-child(7) { animation-delay: 0.1s; }
+        .card-gradient:nth-child(8) { animation-delay: 0.2s; }
+        .card-gradient:nth-child(9) { animation-delay: 0.3s; }
+
+        .card-gradient::before {
+            content: '';
+            position: absolute;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(45deg, #00d4ff, #0099ff, #0066ff, #00d4ff);
+            background-size: 100% 100%;
+            animation: gradientShift 3s ease infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .card-gradient:hover::before {
+            opacity: 1;
+        }
+
+        .card-gradient img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+
+        .card-gradient:hover img {
+            opacity: 0.1;
+        }
+
+        .card-gradient-content {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 25px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            color: white;
+            z-index: 2;
+        }
+
+        .card-gradient-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .card-gradient-content p {
+            font-size: 0.95rem;
+        }
+
+        .code-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .code-section h2 {
+            color: #0099ff;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #0099ff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .code-block code {
+            color: #333;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: white;
+            color: #0099ff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 5px 20px rgba(0, 153, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0, 153, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 153, 255, 0.4);
+            background: #f5f9ff;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            .hover-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .slider-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto 50px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .slider {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(100%);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #000;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 40px 20px 20px;
+            color: white;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease 0.2s;
+        }
+
+        .slide.active .slide-overlay {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .slide-overlay h3 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .slide-overlay p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .control-btn {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn.active {
+            background: white;
+            width: 40px;
+            border-radius: 7px;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.6);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-btn {
+            left: 20px;
+        }
+
+        .next-btn {
+            right: 20px;
+        }
+
+        .slider-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            z-index: 5;
+        }
+
+        .thumbnails {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .thumbnail {
+            cursor: pointer;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+            height: 80px;
+            animation: fadeIn 0.8s ease-out backwards;
+        }
+
+        .thumbnail:nth-child(1) { animation-delay: 0.3s; }
+        .thumbnail:nth-child(2) { animation-delay: 0.35s; }
+        .thumbnail:nth-child(3) { animation-delay: 0.4s; }
+        .thumbnail:nth-child(4) { animation-delay: 0.45s; }
+        .thumbnail:nth-child(5) { animation-delay: 0.5s; }
+        .thumbnail:nth-child(6) { animation-delay: 0.55s; }
+
+        .thumbnail.active {
+            border-color: white;
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .thumbnail:hover {
+            opacity: 0.9;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ Tarea 6</h1>
+            <p>Evolucion de la web</p>
+        </header>
+
+        <div class="slider-container">
+            <div class="slider" id="slider">
+                <div class="slide active">
+                    <img src="etiquetas tema13.png" alt="Tecnología">
+                    <div class="slide-overlay">
+                        <h3>Etiqueta</h3>
+                        <p>Aqui una pequeña muestra de lo trabajado</p>
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <img src="recurso tema13.png" alt="Desarrollo">
+                    <div class="slide-overlay">
+                        <h3>Recurso</h3>
+                        <p>Recurso educativo de la asignacion </p>
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <img src="tarea tema13.png" alt="Innovación">
+                    <div class="slide-overlay">
+                        <h3>tarea enviada</h3>
+                        <p>Aqui esta tarea enviada a tiempo pero aun no corregida </p>
+                    </div>
+                </div>
+
+                
+                
+
+                <button class="nav-btn prev-btn" id="prev">❮</button>
+                <button class="nav-btn next-btn" id="next">❯</button>
+                <div class="slider-info" id="slideInfo">1 / 6</div>
+                <div class="controls" id="controls"></div>
+            </div>
+
+            <div class="thumbnails" id="thumbnails"></div>
+        </div>
+
+      
+
+           
+
+                </code>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <a href="index.html" class="btn">← Volver al Catálogo</a>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const thumbnails = document.getElementById('thumbnails');
+        const controls = document.getElementById('controls');
+        const slideInfo = document.getElementById('slideInfo');
+
+        // Crear thumbnails
+        slides.forEach((slide, index) => {
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'thumbnail';
+            if (index === 0) thumbnail.classList.add('active');
+            thumbnail.innerHTML = `<img src="${slide.querySelector('img').src}" alt="Thumbnail ${index + 1}">`;
+            thumbnail.addEventListener('click', () => showSlide(index));
+            thumbnails.appendChild(thumbnail);
+        });
+
+        // Crear controles
+        slides.forEach((_, index) => {
+            const controlBtn = document.createElement('button');
+            controlBtn.className = 'control-btn';
+            if (index === 0) controlBtn.classList.add('active');
+            controlBtn.addEventListener('click', () => showSlide(index));
+            controls.appendChild(controlBtn);
+        });
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active', 'prev'));
+            document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
+            document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+
+            slides[n].classList.add('active');
+            if (n > 0) slides[n - 1].classList.add('prev');
+
+            document.querySelectorAll('.thumbnail')[n].classList.add('active');
+            document.querySelectorAll('.control-btn')[n].classList.add('active');
+            slideInfo.textContent = `${n + 1} / ${totalSlides}`;
+            currentSlide = n;
+        }
+
+        document.getElementById('prev').addEventListener('click', () => {
+            const prev = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(prev);
+        });
+
+        document.getElementById('next').addEventListener('click', () => {
+            const next = (currentSlide + 1) % totalSlides;
+            showSlide(next);
+        });
+
+        // Auto-play (opcional)
+        setInterval(() => {
+            const next = (currentSlide + 1) % totalSlides;
+            showSlide(next);
+        }, 5000);
+    </script>
+</body>
+</html>

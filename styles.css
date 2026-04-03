@@ -1,0 +1,229 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* GENERAL */
+body {
+    font-family: Arial, sans-serif;
+    background: #eef2f7;
+    scroll-behavior: smooth; /* 🔥 scroll suave */
+}
+
+
+/* MENU */
+.menu {
+    background: #2c3e50;
+    padding: 15px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.menu a {
+    color: white;
+    margin: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    background: #3498db;
+}
+
+
+/* CONTENIDO */
+.page {
+    max-width: 900px;
+    margin: 20px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    line-height: 1.6;
+}
+
+
+/* TITULOS */
+.page h1 {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.page h2 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    border-left: 5px solid #3498db;
+    padding-left: 10px;
+}
+
+
+/* PÁRRAFOS */
+.page p {
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+
+/* LISTAS */
+.page ul {
+    margin-bottom: 20px;
+    padding-left: 25px;
+}
+
+.page li {
+    margin-bottom: 8px;
+}
+
+
+/* 🔥 IMÁGENES SIN DISTORSIÓN */
+.page img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain; /* 👈 muestra la imagen completa sin cortar */
+    border-radius: 0; /* 👈 quita el redondeo para bordes rectos */
+    margin-top: 25px;
+    background-color: #f0f0f0; /* 👈 fondo sutil para imágenes que no llenen */
+}
+
+
+/* BOTONES */
+.btn {
+    display: block;
+    margin: 15px auto;
+    width: 250px;
+    padding: 15px;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #3498db, #6dd5fa);
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #2980b9, #3498db);
+}
+
+
+/* PORTADA CON IMAGEN */
+.portada {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+/* IMAGEN DE FONDO */
+.fondo {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url("UAPA5.jpg.png"); /* cambia por tu imagen */
+    background-size: cover;       /* 🔥 NO se deforma */
+    background-position: center;  /* 🔥 centrada */
+    background-repeat: no-repeat;
+    z-index: -2;
+}
+
+/* CAPA OSCURA */
+.portada::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: -1;
+}
+
+/* CONTENIDO */
+.contenido {
+    max-width: 700px;
+    padding: 20px;
+}
+
+/* TITULO */
+.contenido h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+/* BLOQUE DE DATOS */
+.datos-portada {
+    background: rgba(0,0,0,0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.datos-portada p {
+    margin: 8px 0;
+    font-size: 17px;
+}
+
+.datos-portada strong {
+    color: #6dd5fa;
+}
+
+/* BOTON */
+.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #2980b9;
+}
+
+
+/* TEXTO SOBRE IMAGEN */
+.portada h1,
+.portada h2,
+.portada p {
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+}
+
+
+/* CONTRAPORTADA */
+.final {
+    text-align: center;
+    background: #1a252f;
+    color: white;
+    padding: 50px;
+}
+
+
+/* 🔥 RESPONSIVE (CELULAR) */
+@media (max-width: 768px) {
+
+    .page {
+        padding: 20px;
+        margin: 20px;
+    }
+
+    .menu a {
+        display: block;
+        margin: 5px 0;
+    }
+
+    .btn {
+        width: 90%;
+    }
+}

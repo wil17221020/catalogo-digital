@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarea 5 - Galería Interactiva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .slider-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto 50px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .slider {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(100%);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 40px 20px 20px;
+            color: white;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease 0.2s;
+        }
+
+        .slide.active .slide-overlay {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .slide-overlay h3 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .slide-overlay p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .control-btn {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn.active {
+            background: white;
+            width: 40px;
+            border-radius: 7px;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.6);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-btn {
+            left: 20px;
+        }
+
+        .next-btn {
+            right: 20px;
+        }
+
+        .slider-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            z-index: 5;
+        }
+
+        .thumbnails {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .thumbnail {
+            cursor: pointer;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+            height: 80px;
+            animation: fadeIn 0.8s ease-out backwards;
+        }
+
+        .thumbnail:nth-child(1) { animation-delay: 0.3s; }
+        .thumbnail:nth-child(2) { animation-delay: 0.35s; }
+        .thumbnail:nth-child(3) { animation-delay: 0.4s; }
+        .thumbnail:nth-child(4) { animation-delay: 0.45s; }
+        .thumbnail:nth-child(5) { animation-delay: 0.5s; }
+
+        .thumbnail.active {
+            border-color: white;
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .thumbnail:hover {
+            opacity: 0.9;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .code-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.8s ease-out 0.5s backwards;
+        }
+
+        .code-section h2 {
+            color: #f5576c;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #f5576c;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .code-block code {
+            color: #333;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: white;
+            color: #f5576c;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(245, 87, 108, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(245, 87, 108, 0.4);
+            background: #fff5f7;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            .slider {
+                height: 300px;
+            }
+
+            .thumbnails {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎞️ Tarea 5</h1>
+            <p>Lecciones sobre cognotecnicas</p>
+        </header>
+
+        <div class="slider-container">
+            <div class="slider" id="slider">
+                <div class="slide active">
+                    <img src="etiqueta tema10.png">
+                    <div class="slide-overlay">
+                        <h3>Etiqueta tema 10</h3>
+                        <p>Aqui se muestra un adelanto del contenido</p>
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <img src="recursos tema10.png" alt="Slide 2">
+                    <div class="slide-overlay">
+                        <h3>Recursos tema 10</h3>
+                        <p>Recursos adicionales para el tema 10</p>
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <img src="leccion tema 10.png" alt="Slide 3">
+                    <div class="slide-overlay">
+                        <h3>Calificación</h3>
+                        <p>Calificación del tema 10</p>
+                    </div>
+                </div>
+
+                
+
+
+                <button class="nav-btn prev-btn" id="prev">❮</button>
+                <button class="nav-btn next-btn" id="next">❯</button>
+                <div class="slider-info" id="slideInfo">1 / 5</div>
+                <div class="controls" id="controls"></div>
+            </div>
+
+            <div class="thumbnails" id="thumbnails"></div>
+        </div>
+
+    
+
+        <div class="btn-container">
+            <a href="index.html" class="btn">← Volver al Catálogo</a>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const thumbnails = document.getElementById('thumbnails');
+        const controls = document.getElementById('controls');
+        const slider = document.getElementById('slider');
+        const totalSlides = slides.length;
+
+        // Crear thumbnails
+        slides.forEach((slide, index) => {
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'thumbnail' + (index === 0 ? ' active' : '');
+            thumbnail.innerHTML = `<img src="${slide.querySelector('img').src}" alt="Thumbnail ${index + 1}">`;
+            thumbnail.addEventListener('click', () => goToSlide(index));
+            thumbnails.appendChild(thumbnail);
+
+            // Crear controles
+            const control = document.createElement('button');
+            control.className = 'control-btn' + (index === 0 ? ' active' : '');
+            control.addEventListener('click', () => goToSlide(index));
+            controls.appendChild(control);
+        });
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active', 'prev'));
+            document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
+            document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+
+            if (n >= totalSlides) currentSlide = 0;
+            if (n < 0) currentSlide = totalSlides - 1;
+
+            slides[currentSlide].classList.add('active');
+            document.querySelectorAll('.thumbnail')[currentSlide].classList.add('active');
+            document.querySelectorAll('.control-btn')[currentSlide].classList.add('active');
+            document.getElementById('slideInfo').textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            showSlide(currentSlide);
+        }
+
+        document.getElementById('next').addEventListener('click', () => {
+            currentSlide++;
+            showSlide(currentSlide);
+        });
+
+        document.getElementById('prev').addEventListener('click', () => {
+            currentSlide--;
+            showSlide(currentSlide);
+        });
+
+        // Auto play
+        setInterval(() => {
+            currentSlide++;
+            showSlide(currentSlide);
+        }, 5000);
+    </script>
+</body>
+</html>
